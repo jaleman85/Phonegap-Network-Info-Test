@@ -54,6 +54,11 @@
 	}
 	//
 	function onDeviceReady() {
+		// hide Exit button. They don't have one on iOS devices.
+		if (device.platform === "iOS") {
+			//alert("got iOS");
+			$("#exitApp").addClass("hidden");
+		}
 		checkConnection();
 	}
 	//
@@ -64,7 +69,7 @@
 </head>
 <body onload="onLoad()">
 <div class="button button-block button-large"><img align=left src=favicon-48x48.png>Phonegap Network Information</div>
-<span onclick='navigator.app.exitApp()'><button class="button button-pill button-primary button-large" style="margin:1em;">Exit</button></span>
+<span onclick='navigator.app.exitApp()'><button id=exitApp class="button button-pill button-primary button-large" style="margin:1em;">Exit</button></span>
 
 
 <div id=nt class="button button-block button-primary button-large" style="margin:1em;"><span id=networktype>No network connection</span></div>
