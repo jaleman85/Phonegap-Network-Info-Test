@@ -9,6 +9,7 @@
     .hidden {visibility:collapse;display:none;}
     .expose {visibility:visible;display:block;} /* Here for completeness only. */
     .copyright {padding:5px;align:left;font-style:italic;font-size:small;}
+    #header {margin:0;padding:0;}
     #exitApp {margin:1em;}
     </style>
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
@@ -16,61 +17,70 @@
     var my_media = null;
     var mediaTimer = null;
     // Wait for PhoneGap to load
-	document.addEventListener("deviceready", onDeviceReady, false);
-	document.addEventListener("offline", onOffline, false);
-	document.addEventListener("online", onOnline, false);
-	// http://www.mzcart.com/javascript-how-to-addremove-css-class-from-a-dom-element/
-	// http://www.w3schools.com/jsref/prop_element_classlist.asp
+    document.addEventListener("deviceready", onDeviceReady, false);
+    document.addEventListener("offline", onOffline, false);
+    document.addEventListener("online", onOnline, false);
+    // http://www.mzcart.com/javascript-how-to-addremove-css-class-from-a-dom-element/
+    // http://www.w3schools.com/jsref/prop_element_classlist.asp
     function onOffline() {
-		thePlace = document.getElementById('ns');
-		thePlace.classList.remove('button-action');
-		thePlace.classList.add('button-caution');
-		thePlace = document.getElementById('networkstatus').innerHTML = 'Offline';
-		checkConnection();
+        thePlace = document.getElementById('ns');
+        thePlace.classList.remove('button-action');
+        thePlace.classList.add('button-caution');
+        thePlace = document.getElementById('networkstatus').innerHTML = 'Offline';
+        checkConnection();
     }
-	//
+    //
     function onOnline() {
-		thePlace = document.getElementById('ns');
-		thePlace.classList.remove('button-caution');
-		thePlace.classList.add('button-action');
-		thePlace = document.getElementById('networkstatus').innerHTML = 'Online';
-		checkConnection();
+        thePlace = document.getElementById('ns');
+        thePlace.classList.remove('button-caution');
+        thePlace.classList.add('button-action');
+        thePlace = document.getElementById('networkstatus').innerHTML = 'Online';
+        checkConnection();
     }
-	//
-	function checkConnection() {
-    	var networkState = navigator.connection.type;
+    //
+    function checkConnection() {
+        var networkState = navigator.connection.type;
 
-	    var states = {};
-    	states[Connection.UNKNOWN]  = 'Unknown connection';
-	    states[Connection.ETHERNET] = 'Ethernet connection';
-    	states[Connection.WIFI]     = 'WiFi connection';
-	    states[Connection.CELL_2G]  = 'Cell 2G connection';
-	    states[Connection.CELL_3G]  = 'Cell 3G connection';
-    	states[Connection.CELL_4G]  = 'Cell 4G connection';
-	    states[Connection.CELL]     = 'Cell generic connection';
-	    states[Connection.NONE]     = 'No network connection';
+        var states = {};
+        states[Connection.UNKNOWN]  = 'Unknown connection';
+        states[Connection.ETHERNET] = 'Ethernet connection';
+        states[Connection.WIFI]     = 'WiFi connection';
+        states[Connection.CELL_2G]  = 'Cell 2G connection';
+        states[Connection.CELL_3G]  = 'Cell 3G connection';
+        states[Connection.CELL_4G]  = 'Cell 4G connection';
+        states[Connection.CELL]     = 'Cell generic connection';
+        states[Connection.NONE]     = 'No network connection';
 
-		thePlace = document.getElementById('networktype').innerHTML = states[networkState];
-		//alert('Connection type: ' + states[networkState]);
-	}
-	//
-	function onDeviceReady() {
-		// hide Exit button. They don't have one on iOS devices.
-		if (device.platform === "iOS") {
-			//alert("got iOS");
-			// http://www.mzcart.com/javascript-how-to-addremove-css-class-from-a-dom-element/
-			document.getElementById('exitApp').classList.add("hidden");
-		}
-		checkConnection();
-	}
-	//
-	function onLoad() {
-	}
+        thePlace = document.getElementById('networktype').innerHTML = states[networkState];
+        //alert('Connection type: ' + states[networkState]);
+    }
+    //
+    function onDeviceReady() {
+        if (device.platform === "iOS") {
+            //alert("got iOS");
+            // hide Exit button. They don't have one on iOS devices.
+            // http://www.mzcart.com/javascript-how-to-addremove-css-class-from-a-dom-element/
+            document.getElementById('exitApp').classList.add("hidden");
+            /* deals with post-iOS-7 change that covers the status bar */
+            /* http://coenraets.org/blog/2013/09/phonegap-and-cordova-with-ios-7/ */
+            document.body.style.marginTop = "20px";
+        } else if (device.platform == 'Android') {
+            // Get rid of 300ms delay 
+            document.addEventListener('DOMContentLoaded', function() { FastClick.attach(document.body); }, false);
+        }
+        checkConnection();
+    }
+    //
+    function onLoad() {
+    }
 
     </script>
 </head>
 <body onload="onLoad()">
-<div class="button button-block button-large"><img align=left src=favicon-48x48.png>Phonegap Network Information</div>
+<div id=header class="button button-block button-large">
+    <img align=left src=favicon-48x48.png>
+    Phonegap Network Information
+</div>
 
 <button id=exitApp onclick='navigator.app.exitApp()' class="button button-pill button-primary button-large">Exit</button>
 
